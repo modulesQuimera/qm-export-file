@@ -1,0 +1,38 @@
+
+<script type="text/html" data-template-name="export-file">
+    <div class="form-row node-input-filename">
+         <label for="node-input-filename"><i class="fa fa-file"></i> Filename</span></label>
+         <input id="node-input-filename" type="text">
+    </div>
+    <div class="form-row node-input-directory">
+        <label for="node-input-directory"><i class="fa fa-random"></i> Directory</span></label>
+        <input id="node-input-directory" type="text">
+   </div>
+    <div class="form-row form-row-file-write-options">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-createDir" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-createDir" style="width: 70%;"> Create directory if it doesn't exist?</label>
+    </div>
+    <div class="form-tips">Tip: The directory should be an absolute path, otherwise it will be relative to the working directory of the Node-RED process.</span></div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('export-file',{
+        category: 'Export file',
+        defaults: {
+            filename: {value:""},
+            directory:{value:""},
+            createDir: {value:false},
+        },
+        label: "export file",
+        paletteLabel: "export-file",
+        color:"#66CDAA",
+        inputs:1,
+        outputs:1,
+        icon: "file-out.svg",
+    });
+</script>
+
+<script type="text/html" data-help-name="export-file">
+    <p>Working on it...</p>
+</script>
