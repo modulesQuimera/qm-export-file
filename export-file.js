@@ -91,27 +91,27 @@ module.exports = function(RED) {
             var globalContext = this.context().global;
             var exportMode = globalContext.get("exportMode");
             var exportFile = globalContext.get("exportFile");
-            var exportFileEmpty = {
-                "slots": [
-                    {
-                        "jig_test": [],
-                        "jig_error": []
-                    },
-                    {
-                        "jig_test": [],
-                        "jig_error": []
-                    },
-                    {
-                        "jig_test": [],
-                        "jig_error": []
-                    },
-                    {
-                        "jig_test": [],
-                        "jig_error": []
-                    },
-                ]
-            }
-            globalContext.set("exportFile", exportFileEmpty)
+            // var exportFileEmpty = {
+            //     "slots": [
+            //         {
+            //             "jig_test": [],
+            //             "jig_error": []
+            //         },
+            //         {
+            //             "jig_test": [],
+            //             "jig_error": []
+            //         },
+            //         {
+            //             "jig_test": [],
+            //             "jig_error": []
+            //         },
+            //         {
+            //             "jig_test": [],
+            //             "jig_error": []
+            //         },
+            //     ]
+            // }
+            // globalContext.set("exportFile", exportFileEmpty)
 
             if(exportMode){
                 node.status({fill:"green",shape:"dot",text:"Generating"});
