@@ -89,7 +89,7 @@ module.exports = function(RED) {
 
         node.on('input', function(msg, send, done) {
             var globalContext = this.context().global;
-            var exportMode = globalContext.get("exportMode");
+            // var exportMode = globalContext.get("exportMode");
             var exportFile = globalContext.get("exportFile");
             // var exportFileEmpty = {
             //     "slots": [
@@ -113,42 +113,42 @@ module.exports = function(RED) {
             // }
             // globalContext.set("exportFile", exportFileEmpty)
 
-            if(exportMode){
-                node.status({fill:"green",shape:"dot",text:"Generating"});
-                var file = {
-                    payload: exportFile
-                }
-                var msgQueue = node.msgQueue;
-
-                msgQueue.push(
-                    {
-                        msg: file,
-                        send: send,
-                        done: done
-                    }
-                )
-                if (msgQueue.length > 1) {
-                    return;
-                }
-
-                try {
-                    processQueue(msgQueue);
-                }
-                catch(e) {
-                    node.status({fill:"red",shape:"dot",text:"Error"});
-                    node.msgQueue = [];
-                    if (node.closing) {
-                        closeNode();
-                    }
-                    throw e;                    
-                }
-                node.status({fill:"green",shape:"dot",text:"Json generated"});
-                done();
+            // if(exportMode){
+            node.status({fill:"green",shape:"dot",text:"Generating"});
+            var file = {
+                payload: exportFile
             }
-            else{
-                node.status({fill:"yellow",shape:"dot",text:"Warn: Export mode is FALSE"});
-                done();
+            var msgQueue = node.msgQueue;
+
+            msgQueue.push(
+                {
+                    msg: file,
+                    send: send,
+                    done: done
+                }
+            )
+            if (msgQueue.length > 1) {
+                return;
             }
+
+            try {
+                processQueue(msgQueue);
+            }
+            catch(e) {
+                node.status({fill:"red",shape:"dot",text:"Error"});
+                node.msgQueue = [];
+                if (node.closing) {
+                    closeNode();
+                }
+                throw e;                    
+            }
+            node.status({fill:"green",shape:"dot",text:"Json generated"});
+            done();
+            // }
+            // else{
+                // node.status({fill:"yellow",shape:"dot",text:"Warn: Export mode is FALSE"});
+                // done();
+            // }
         });
     }
 

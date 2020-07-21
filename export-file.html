@@ -71,11 +71,13 @@
     RED.nodes.registerType('export-file',{
         category: 'Export file',
         defaults: {
+            name:{value:""},
             filename: {value:""},
             directory:{value:""},
             createDir: {value:false},
         },
-        label: "Export File",
+        label: function() { return this.name? "Export File - " + this.name:"Export File" },
+     
         paletteLabel: "Export File",
         color:"#66CDAA",
         inputs:1,
