@@ -91,29 +91,10 @@ module.exports = function(RED) {
             var globalContext = this.context().global;
             // var exportMode = globalContext.get("exportMode");
             var exportFile = globalContext.get("exportFile");
-            // var exportFileEmpty = {
-            //     "slots": [
-            //         {
-            //             "jig_test": [],
-            //             "jig_error": []
-            //         },
-            //         {
-            //             "jig_test": [],
-            //             "jig_error": []
-            //         },
-            //         {
-            //             "jig_test": [],
-            //             "jig_error": []
-            //         },
-            //         {
-            //             "jig_test": [],
-            //             "jig_error": []
-            //         },
-            //     ]
-            // }
-            // globalContext.set("exportFile", exportFileEmpty)
+            
+            var quantidade = globalContext.get("export_file") + 1;
+            globalContext.set("export_file", quantidade);
 
-            // if(exportMode){
             node.status({fill:"green",shape:"dot",text:"Generating"});
             var file = {
                 payload: exportFile

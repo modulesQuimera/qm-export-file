@@ -1,7 +1,7 @@
 <style>
 
     label{
-        width: 50% !important;
+        width: 100% !important;
         margin-bottom: 2px !important;
     }
 
@@ -18,7 +18,7 @@
     .hr-div-file{
         display: flex !important;
         justify-content: space-between !important;
-        margin-top: 300px !important;
+        /* margin-top: 300px !important; */
     }
 
     .optional{
@@ -30,15 +30,99 @@
         text-align: center;
     }
 
+    .columm-50{
+        display: flex !important;
+        flex-direction: column !important;
+        width: 50% !important;
+        float: left !important;
+    }
+
+    .columm-30{
+        display: flex !important;
+        flex-direction: column !important;
+        width: 30% !important;
+        float: left !important;
+    }
+
+
+    .columm-70{
+        display: flex !important;
+        flex-direction: column !important;
+        width: 70% !important;
+        float: left !important;
+    }
+
+    hr {
+    width: 40% !important;
+    float: left !important;
+    }
+
+    .hr-div-get{
+        display: flex !important;
+        justify-content: space-between !important;
+        margin-top: 250px !important;
+    }
+
+    .optional{
+        height: max-content !important;
+        margin-top: 10px !important;
+    }
+
+    .descript{
+        text-align: center;
+    }
+
+
+    .descript-div{
+        max-width: 444px !important;
+    }
+
+    span.red-ui-typedInput-type-label {
+    /* background: chartreuse; */
+    /* display: block; */
+    width: 250px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    }
+
+    .btn-aln{
+        display: flex !important;
+        flex-direction: row-reverse !important;
+        /* padding-left: 30px; */
+        align-content: center;
+        align-items: flex-end;
+    }
+
 </style>
 
 <script type="text/html" data-template-name="export-file">
 
-    <div class="form-row columm">
+    <div class="form-row columm descript-div">
         <strong class="descript">
          This Component is used to export the JIG test to file.
      </strong>
-     </div>
+    </div>
+
+    <div style=" position: relative; display:flex;">
+        <div class="form-row columm-70">
+            <label style="width: 50% !important;" for="node-input-name" ><i class="fa fa-tag"></i> Identification Note</label>
+            <input type="text" id="node-input-name" placeholder="Name" style="width: 100%">
+        </div>
+        <!-- <div class="form-row columm-30" style="align-items: flex-end !important;">
+            <label style="width: max-content !important; padding-right: 24px;"><i class="fa fa-list-ul"></i> Item</label>
+            <div class="form-row btn-aln" >
+                <a id="addGpio" class="red-ui-button" ><i class="fa fa-plus"></i></a>
+                <a id="remGpio" class="red-ui-button" style="margin-right: 5px;" ><i class="fa fa-minus"></i></a>
+            </div>
+        </div> -->
+    </div>
+
+    <div class="hr-div-file">
+        <hr>
+        <span class="optional">Export</span>
+        <hr>
+    </div>
     <div class="form-row node-input-filename columm ">
          <label for="node-input-filename"><i class="fa fa-file"></i> Filename</span></label>
          <input id="node-input-filename" type="text">
@@ -50,12 +134,12 @@
     <div class="form-row form-row-file-write-options">
         <!-- <label>&nbsp;</label> -->
         <input type="checkbox" id="node-input-createDir" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-createDir" style="width: 70%;"> Create directory if it doesn't exist?</label>
+        <span for="node-input-createDir" style="width: 70%;"> Create directory if it doesn't exist?</span>
     </div>
     <div class="form-tips">Tip: The directory should be an absolute path, otherwise it will be relative to the working directory of the Node-RED process.</span></div>
 
 
-    <div class="hr-div-file">
+    <!-- <div class="hr-div-file">
         <hr>
         <span class="optional">Optional</span>
         <hr>
@@ -64,7 +148,7 @@
     <div class="form-row columm">
         <label style="width: 50% !important;" for="node-input-name" ><i class="fa fa-tag"></i> Component Nickname</label>
         <input type="text" id="node-input-name" placeholder="Name">
-    </div>
+    </div> -->
 </script>
 
 <script type="text/javascript">
