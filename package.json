@@ -1,6 +1,6 @@
 {
   "name": "qm-export-file",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "export-file module - Node-Red",
   "main": "export-file.js",
   "scripts": {
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/modulesQuimera/qm-hub-export-file.git"
+    "url": "git+https://github.com/modulesQuimera/qm-export-file.git"
   },
   "keywords": ["quimera", "hub", "JIG"],
   "author": "HUB-LSE",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/modulesQuimera/qm-hub-export-file/issues"
+    "url": "https://github.com/modulesQuimera/qm-export-file/issues"
   },
-  "homepage": "https://github.com/modulesQuimera/qm-hub-export-file#readme",
+  "homepage": "https://github.com/modulesQuimera/qm-export-file#readme",
   "node-red": {
     "nodes": {
         "exportFile": "export-file.js"
