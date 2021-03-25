@@ -13,6 +13,11 @@
   "keywords": ["quimera", "hub", "JIG"],
   "author": "HUB-LSE",
   "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^9.0.0",
+    "path": "^0.12.7",
+    "exceljs": "^4.2.1"
+  },
   "bugs": {
     "url": "https://github.com/modulesQuimera/qm-export-file/issues"
   },
