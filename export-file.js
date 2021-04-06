@@ -88,7 +88,7 @@ module.exports = function (RED) {
             });
         }
 
-        async function generateFILE(globalContext, directory){
+        async function generateFILE(globalContext, directory, done){
             
 
             var ac_power_maps = globalContext.get("map").ac_power;
@@ -103,7 +103,7 @@ module.exports = function (RED) {
 
             worksheet.getCell('B2').value = "- AC POWER MAPPING -";
             worksheet.getCell('B2').fill = { type: 'pattern', pattern:'solid', fgColor:{argb:'FFFA8072'} };
-            worksheet.mergeCells('B2:E2');
+            worksheet.mergeCells('B2:D2');
             
             worksheet.getColumn("B").width = 20;
             worksheet.getColumn("B").alignment = { vertical: 'middle', horizontal: 'center' };
@@ -111,9 +111,7 @@ module.exports = function (RED) {
             worksheet.getColumn("C").alignment = { vertical: 'middle', horizontal: 'center' };
             worksheet.getColumn("D").width = 20;
             worksheet.getColumn("D").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("E").width = 20;
-            worksheet.getColumn("E").alignment = { vertical: 'middle', horizontal: 'center' };
-
+            
             var rows_to_skip = 3; //Primeira table (ideia intuitiva é saltar o numero de linhas da tebela para gerar um novo header para cada slot de mapeamento)
             for(var currentMap of ac_power_maps){
                 if(currentMap.length > 0){
@@ -126,38 +124,37 @@ module.exports = function (RED) {
                             { name: 'Feature', key: 'feat', width: 20  },
                             { name: 'Pin', key: 'pin', width: 20 },
                             { name: '(TP or Connector)', key: 'board', width: 20 },
-                            { name: 'User Label', key: 'user', width: 20 }
                         ],
                         rows: []
                     });
                     var AC_POWER = worksheet.getTable(`AC_POWER_${rows_to_skip}`);
                     for(var row of currentMap){
                         if(row.feat != ""){
-                            AC_POWER.addRow([row.feat, row.pin, row.board, row.user]);
+                            AC_POWER.addRow([row.feat, row.pin, row.board]);
                             AC_POWER.commit();
                         }
                     }
-                    rows_to_skip += 11;
+                    rows_to_skip += 12;
                 }
             }
 
-            worksheet.getCell('H2').value = "- MULTIMETER MAPPING -";
-            worksheet.getCell('H2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF32CD32'} };
-            worksheet.mergeCells('H2:J2');
+            worksheet.getCell('G2').value = "- MULTIMETER MAPPING -";
+            worksheet.getCell('G2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF32CD32'} };
+            worksheet.mergeCells('G2:I2');
 
-            worksheet.getColumn("H").width = 20;
+            worksheet.getColumn("G").width = 20;
+            worksheet.getColumn("G").alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.getColumn("H").width = 10;
             worksheet.getColumn("H").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("I").width = 10;
+            worksheet.getColumn("I").width = 20;
             worksheet.getColumn("I").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("J").width = 20;
-            worksheet.getColumn("J").alignment = { vertical: 'middle', horizontal: 'center' };
 
             rows_to_skip = 3;
             for(var currentMap of multimeter_maps){
                 if(currentMap.length > 0){
                     worksheet.addTable({
                         name: `MULTIMETER_${rows_to_skip}`,
-                        ref: `H${rows_to_skip}`,
+                        ref: `G${rows_to_skip}`,
                         headerRow: true,
                         totalsRow: false,
                         columns: [
@@ -180,23 +177,23 @@ module.exports = function (RED) {
                 }
             }
 
-            worksheet.getCell('M2').value = "- COMMUNICATION MAPPING -";
-            worksheet.getCell('M2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF0080FF'} };
-            worksheet.mergeCells('M2:O2');
+            worksheet.getCell('L2').value = "- COMMUNICATION MAPPING -";
+            worksheet.getCell('L2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF0080FF'} };
+            worksheet.mergeCells('L2:N2');
 
-            worksheet.getColumn("M").width = 20;
+            worksheet.getColumn("L").width = 20;
+            worksheet.getColumn("L").alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.getColumn("M").width = 10;
             worksheet.getColumn("M").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("N").width = 10;
+            worksheet.getColumn("N").width = 20;
             worksheet.getColumn("N").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("O").width = 20;
-            worksheet.getColumn("O").alignment = { vertical: 'middle', horizontal: 'center' };
 
             rows_to_skip = 3;
             for(var currentMap of communication_maps){
                 if(currentMap.length > 0){
                     worksheet.addTable({
                         name: `COMMUNICATION_${rows_to_skip}`,
-                        ref: `M${rows_to_skip}`,
+                        ref: `L${rows_to_skip}`,
                         headerRow: true,
                         totalsRow: false,
                         columns: [
@@ -220,22 +217,22 @@ module.exports = function (RED) {
                 
             }
 
-            worksheet.getCell('R2').value = "- RELAY MAPPING -";
-            worksheet.getCell('R2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF808080'} };
-            worksheet.mergeCells('R2:T2');
-            worksheet.getColumn("R").width = 20;
+            worksheet.getCell('Q2').value = "- RELAY MAPPING -";
+            worksheet.getCell('Q2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF808080'} };
+            worksheet.mergeCells('Q2:S2');
+            worksheet.getColumn("Q").width = 20;
+            worksheet.getColumn("Q").alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.getColumn("R").width = 10;
             worksheet.getColumn("R").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("S").width = 10;
+            worksheet.getColumn("S").width = 20;
             worksheet.getColumn("S").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("T").width = 20;
-            worksheet.getColumn("T").alignment = { vertical: 'middle', horizontal: 'center' };
 
             rows_to_skip = 3;
             for(var currentMap of relay_maps){
                 if(currentMap.length > 0){
                     worksheet.addTable({
                         name: `RELAY_${rows_to_skip}`,
-                        ref: `R${rows_to_skip}`,
+                        ref: `Q${rows_to_skip}`,
                         headerRow: true,
                         totalsRow: false,
                         columns: [
@@ -258,23 +255,23 @@ module.exports = function (RED) {
                 }
             }
 
-            worksheet.getCell('W2').value = "- GPIO MAPPING -";
-            worksheet.getCell('W2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FFFFFF00'} };
-            worksheet.mergeCells('W2:Y2');
+            worksheet.getCell('V2').value = "- GPIO MAPPING -";
+            worksheet.getCell('V2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FFFFFF00'} };
+            worksheet.mergeCells('V2:X2');
 
-            worksheet.getColumn("W").width = 20;
+            worksheet.getColumn("V").width = 20;
+            worksheet.getColumn("V").alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.getColumn("W").width = 10;
             worksheet.getColumn("W").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("X").width = 10;
+            worksheet.getColumn("X").width = 20;
             worksheet.getColumn("X").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("Y").width = 20;
-            worksheet.getColumn("Y").alignment = { vertical: 'middle', horizontal: 'center' };
 
             rows_to_skip = 3;
             for(var currentMap of gpio_maps){
                 if(currentMap.length > 0){
                     worksheet.addTable({
                         name: `GPIO_${rows_to_skip}`,
-                        ref: `W${rows_to_skip}`,
+                        ref: `V${rows_to_skip}`,
                         headerRow: true,
                         totalsRow: false,
                         columns: [
@@ -299,21 +296,21 @@ module.exports = function (RED) {
                     
             }
 
-            worksheet.getCell('AB2').value = "- MUX MAPPING -"
-            worksheet.mergeCells('AB2:AD2');
+            worksheet.getCell('AA2').value = "- MUX MAPPING -"
+            worksheet.mergeCells('AA2:AC2');
+            worksheet.getColumn("AA").width = 20;
+            worksheet.getColumn("AA").alignment = { vertical: 'middle', horizontal: 'center' };
             worksheet.getColumn("AB").width = 20;
             worksheet.getColumn("AB").alignment = { vertical: 'middle', horizontal: 'center' };
             worksheet.getColumn("AC").width = 20;
             worksheet.getColumn("AC").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("AD").width = 20;
-            worksheet.getColumn("AD").alignment = { vertical: 'middle', horizontal: 'center' };
 
             rows_to_skip = 3;
             for(var currentMap of mux_maps){
                 if(currentMap.length > 0){
                     worksheet.addTable({
                         name: `MUX_${rows_to_skip}`,
-                        ref: `AB${rows_to_skip}`,
+                        ref: `AA${rows_to_skip}`,
                         headerRow: true,
                         totalsRow: false,
                         columns: [
@@ -337,8 +334,14 @@ module.exports = function (RED) {
             };
 
             await workbook.xlsx.writeFile(directory+'/jig_map.xlsx')
-            .then(() => console.log('The JIG MAPPING file was written successfully'))
-            .catch(() => console.log('The JIG MAPPING file are in use on another program.'));
+            .then(() => {
+                console.log('The JIG MAPPING file was written successfully.')
+                node.status({ fill: "green", shape: "dot", text: "The JIG MAPPING file was written successfully." });
+            })
+            .catch(() => {
+                node.status({ fill: "red", shape: "dot", text: "The JIG MAPPING file are in use on another program." });
+                console.log('The JIG MAPPING file are in use on another program.');
+            });
 
         }
 
@@ -351,7 +354,7 @@ module.exports = function (RED) {
             globalContext.set("export_file", quantidade);
 
 
-            generateFILE(globalContext, this.directory);
+            generateFILE(globalContext, this.directory, done);
 
             node.status({ fill: "green", shape: "dot", text: "Generating" });
             var file = {

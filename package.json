@@ -1,6 +1,6 @@
 {
   "name": "qm-export-file",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "export-file module - Node-Red",
   "main": "export-file.js",
   "scripts": {
