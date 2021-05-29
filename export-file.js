@@ -90,250 +90,66 @@ module.exports = function (RED) {
 
         async function generateFILE(globalContext, directory, done){
             
-
-            var ac_power_maps = globalContext.get("map").ac_power;
-            var multimeter_maps = globalContext.get("map").multimeter;
-            var communication_maps = globalContext.get("map").communication;
-            var relay_maps = globalContext.get("map").relay;
-            var gpio_maps = globalContext.get("map").gpio;
-            var mux_maps = globalContext.get("map").mux;
-
+            var file = globalContext.get("exportFile");
+            file = JSON.stringify(file);
+            
             const workbook = new Excel.Workbook();
             const worksheet = workbook.addWorksheet("JIG Mapeamento");
 
-            worksheet.getCell('B2').value = "- AC POWER MAPPING -";
-            worksheet.getCell('B2').fill = { type: 'pattern', pattern:'solid', fgColor:{argb:'FFFA8072'} };
-            worksheet.mergeCells('B2:D2');
-            
-            worksheet.getColumn("B").width = 20;
-            worksheet.getColumn("B").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("C").width = 10;
-            worksheet.getColumn("C").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("D").width = 20;
-            worksheet.getColumn("D").alignment = { vertical: 'middle', horizontal: 'center' };
-            
-            var rows_to_skip = 3; //Primeira table (ideia intuitiva é saltar o numero de linhas da tebela para gerar um novo header para cada slot de mapeamento)
-            for(var currentMap of ac_power_maps){
-                if(currentMap.length > 0){
-                    worksheet.addTable({
-                        name: `AC_POWER_${rows_to_skip}`,
-                        ref: `B${rows_to_skip}`,
-                        headerRow: true,
-                        totalsRow: false,
-                        columns: [
-                            { name: 'Feature', key: 'feat', width: 20  },
-                            { name: 'Pin', key: 'pin', width: 20 },
-                            { name: '(TP or Connector)', key: 'board', width: 20 },
-                        ],
-                        rows: []
-                    });
-                    var AC_POWER = worksheet.getTable(`AC_POWER_${rows_to_skip}`);
-                    for(var row of currentMap){
-                        if(row.feat != ""){
-                            AC_POWER.addRow([row.feat, row.pin, row.board]);
-                            AC_POWER.commit();
+            var MODULES_MAPS = [
+                { type: 'AC_power_source_virtual_V1_0', feat: 'B', pin: 'C', board: 'D', skip: 12, maps: globalContext.get("map").ac_power, colorHeader: 'FFFA8072', titleHeader: "- AC POWER MAPPING -" },
+                { type: 'multimeter_modular_V1_0', feat: 'G', pin: 'H', board: 'I', skip: 35, maps: globalContext.get("map").multimeter, colorHeader: 'FF32CD32', titleHeader: "- MULTIMETER MAPPING -" },
+                { type: 'communication_modular_V1_0', feat: 'L', pin: 'M', board: 'N', skip: 41, maps: globalContext.get("map").communication, colorHeader: 'FF0080FF', titleHeader: "- COMMUNICATION MAPPING -" },
+                { type: 'relay_modular_V1_0', feat: 'Q', pin: 'R', board: 'S', skip: 18, maps: globalContext.get("map").relay, colorHeader: 'FF808080', titleHeader: "- RELAY MAPPING -" },
+                { type: 'GPIO_modular_V1_0', feat: 'V', pin: 'W', board: 'X', skip: 27, maps: globalContext.get("map").gpio, colorHeader: 'FFFA8072', titleHeader: "- GPIO MAPPING -" },
+                { type: 'mux_modular_V1_0', feat: 'AA', pin: 'AB', board: 'AC', skip: 42, maps: globalContext.get("map").mux, colorHeader: 'FFFFFFFF', titleHeader: "- MUX MAPPING -" },
+            ]
+
+            for(var CURRENT_MODULE of MODULES_MAPS){
+
+                worksheet.getCell(`${CURRENT_MODULE.feat}2`).value = CURRENT_MODULE.titleHeader;
+                worksheet.getCell(`${CURRENT_MODULE.feat}2`).fill = { type: 'pattern', pattern:'solid', fgColor:{ argb: CURRENT_MODULE.colorHeader } };
+                worksheet.mergeCells(`${CURRENT_MODULE.feat}2:${CURRENT_MODULE.board}2`);
+                
+                worksheet.getColumn(CURRENT_MODULE.feat).width = 20;
+                worksheet.getColumn(CURRENT_MODULE.feat).alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getColumn(CURRENT_MODULE.pin).width = 20;
+                worksheet.getColumn(CURRENT_MODULE.pin).alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getColumn(CURRENT_MODULE.board).width = 20;
+                worksheet.getColumn(CURRENT_MODULE.board).alignment = { vertical: 'middle', horizontal: 'center' };
+                
+                var rows_to_skip = 3; //Primeira table (ideia intuitiva é saltar o numero de linhas da tebela para gerar um novo header para cada slot de mapeamento)
+                if(file.indexOf(CURRENT_MODULE.type) !== -1){ // verifica se o mapeamento está sendo utlizado no flow atual.
+                    for(var currentMap of CURRENT_MODULE.maps){
+                        if(currentMap.length > 0){
+                            var CURRENT_TABLE = worksheet.addTable({
+                                name: `${CURRENT_MODULE.type}_${rows_to_skip}`,
+                                ref: `${CURRENT_MODULE.feat}${rows_to_skip}`,
+                                headerRow: true,
+                                totalsRow: false,
+                                columns: [
+                                    { name: 'Feature', key: 'feat', width: 20  },
+                                    { name: 'Pin', key: 'pin', width: 20 },
+                                    { name: '(TP or Connector)', key: 'board', width: 20 },
+                                ],
+                                rows: []
+                            });
+                            
+                            currentMap.forEach( (item) => {
+                                if(item.pin !== ""){
+                                    CURRENT_TABLE.addRow([item.feat, item.pin, item.board]);
+                                }else {
+                                    CURRENT_TABLE.addRow([,item.feat,]);
+                                }
+                                CURRENT_TABLE.commit();
+                            });
+                            rows_to_skip += CURRENT_MODULE.skip;
                         }
                     }
-                    rows_to_skip += 12;
                 }
             }
 
-            worksheet.getCell('G2').value = "- MULTIMETER MAPPING -";
-            worksheet.getCell('G2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF32CD32'} };
-            worksheet.mergeCells('G2:I2');
-
-            worksheet.getColumn("G").width = 20;
-            worksheet.getColumn("G").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("H").width = 10;
-            worksheet.getColumn("H").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("I").width = 20;
-            worksheet.getColumn("I").alignment = { vertical: 'middle', horizontal: 'center' };
-
-            rows_to_skip = 3;
-            for(var currentMap of multimeter_maps){
-                if(currentMap.length > 0){
-                    worksheet.addTable({
-                        name: `MULTIMETER_${rows_to_skip}`,
-                        ref: `G${rows_to_skip}`,
-                        headerRow: true,
-                        totalsRow: false,
-                        columns: [
-                            { name: 'Feature', key: 'feat', width: 20  },
-                            { name: 'Pin', key: 'pin', width: 20 },
-                            { name: '(TP or Connector)', key: 'board', width: 20 },
-                        ],
-                        rows: []
-                    });
-                    var MULTIMETER = worksheet.getTable(`MULTIMETER_${rows_to_skip}`);
-                    currentMap.forEach( (item) => {
-                        if(item.pin !== ""){
-                            MULTIMETER.addRow([item.feat, item.pin, item.board]);
-                        }else {
-                            MULTIMETER.addRow([,item.feat,]);
-                        }
-                        MULTIMETER.commit();
-                    });
-                    rows_to_skip += 35;
-                }
-            }
-
-            worksheet.getCell('L2').value = "- COMMUNICATION MAPPING -";
-            worksheet.getCell('L2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF0080FF'} };
-            worksheet.mergeCells('L2:N2');
-
-            worksheet.getColumn("L").width = 20;
-            worksheet.getColumn("L").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("M").width = 10;
-            worksheet.getColumn("M").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("N").width = 20;
-            worksheet.getColumn("N").alignment = { vertical: 'middle', horizontal: 'center' };
-
-            rows_to_skip = 3;
-            for(var currentMap of communication_maps){
-                if(currentMap.length > 0){
-                    worksheet.addTable({
-                        name: `COMMUNICATION_${rows_to_skip}`,
-                        ref: `L${rows_to_skip}`,
-                        headerRow: true,
-                        totalsRow: false,
-                        columns: [
-                            { name: 'Feature', key: 'feat', width: 20  },
-                            { name: 'Pin', key: 'pin', width: 20 },
-                            { name: '(TP or Connector)', key: 'board', width: 20 },
-                        ],
-                        rows: []
-                    });
-                    var COMMUNICATION = worksheet.getTable(`COMMUNICATION_${rows_to_skip}`);
-                    currentMap.forEach( (item) => {
-                        if(item.pin !== ""){
-                            COMMUNICATION.addRow([item.feat, item.pin, item.board]);
-                        }else {
-                            COMMUNICATION.addRow([,item.feat,]);
-                        }
-                        COMMUNICATION.commit();
-                    });
-                    rows_to_skip += 41;
-                }
-                
-            }
-
-            worksheet.getCell('Q2').value = "- RELAY MAPPING -";
-            worksheet.getCell('Q2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FF808080'} };
-            worksheet.mergeCells('Q2:S2');
-            worksheet.getColumn("Q").width = 20;
-            worksheet.getColumn("Q").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("R").width = 10;
-            worksheet.getColumn("R").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("S").width = 20;
-            worksheet.getColumn("S").alignment = { vertical: 'middle', horizontal: 'center' };
-
-            rows_to_skip = 3;
-            for(var currentMap of relay_maps){
-                if(currentMap.length > 0){
-                    worksheet.addTable({
-                        name: `RELAY_${rows_to_skip}`,
-                        ref: `Q${rows_to_skip}`,
-                        headerRow: true,
-                        totalsRow: false,
-                        columns: [
-                            { name: 'Feature', key: 'feat', width: 20  },
-                            { name: 'Pin', key: 'pin', width: 20 },
-                            { name: '(TP or Connector)', key: 'board', width: 20 },
-                        ],
-                        rows: []
-                    });
-                    var RELAY = worksheet.getTable(`RELAY_${rows_to_skip}`);
-                    currentMap.forEach( (item) => {
-                        if(item.pin !== ""){
-                            RELAY.addRow([item.feat, item.pin, item.board]);
-                        }else {
-                            RELAY.addRow([,item.feat,]);
-                        }
-                        RELAY.commit();
-                    });
-                    rows_to_skip += 18;
-                }
-            }
-
-            worksheet.getCell('V2').value = "- GPIO MAPPING -";
-            worksheet.getCell('V2').fill = { type: 'pattern', pattern: 'solid', fgColor:{argb:'FFFFFF00'} };
-            worksheet.mergeCells('V2:X2');
-
-            worksheet.getColumn("V").width = 20;
-            worksheet.getColumn("V").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("W").width = 10;
-            worksheet.getColumn("W").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("X").width = 20;
-            worksheet.getColumn("X").alignment = { vertical: 'middle', horizontal: 'center' };
-
-            rows_to_skip = 3;
-            for(var currentMap of gpio_maps){
-                if(currentMap.length > 0){
-                    worksheet.addTable({
-                        name: `GPIO_${rows_to_skip}`,
-                        ref: `V${rows_to_skip}`,
-                        headerRow: true,
-                        totalsRow: false,
-                        columns: [
-                            { name: 'Feature', key: 'feat', width: 20  },
-                            { name: 'Pin', key: 'pin', width: 20 },
-                            { name: '(TP or Connector)', key: 'board', width: 20 },
-                        ],
-                        rows: []
-                    });
-
-                    var GPIO = worksheet.getTable(`GPIO_${rows_to_skip}`);
-                    currentMap.forEach( (item) => {
-                        if(item.pin !== ""){
-                            GPIO.addRow([item.feat, item.pin, item.board]);
-                        }else {
-                            GPIO.addRow([,item.feat,]);
-                        }
-                        GPIO.commit();
-                    });
-                    rows_to_skip += 27;
-                }
-                    
-            }
-
-            worksheet.getCell('AA2').value = "- MUX MAPPING -"
-            worksheet.mergeCells('AA2:AC2');
-            worksheet.getColumn("AA").width = 20;
-            worksheet.getColumn("AA").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("AB").width = 20;
-            worksheet.getColumn("AB").alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.getColumn("AC").width = 20;
-            worksheet.getColumn("AC").alignment = { vertical: 'middle', horizontal: 'center' };
-
-            rows_to_skip = 3;
-            for(var currentMap of mux_maps){
-                if(currentMap.length > 0){
-                    worksheet.addTable({
-                        name: `MUX_${rows_to_skip}`,
-                        ref: `AA${rows_to_skip}`,
-                        headerRow: true,
-                        totalsRow: false,
-                        columns: [
-                            { name: 'Feature', key: 'feat', width: 20  },
-                            { name: 'Pin', key: 'pin', width: 20 },
-                            { name: '(TP or Connector)', key: 'board', width: 20 },
-                        ],
-                        rows: []
-                    });
-                    var MUX = worksheet.getTable(`MUX_${rows_to_skip}`);
-                    currentMap.forEach( (item) => {
-                        if(item.pin !== ""){
-                            MUX.addRow([item.feat, item.pin, item.board]);
-                        }else {
-                            MUX.addRow([,item.feat,]);
-                        }
-                        MUX.commit();
-                    });
-                    rows_to_skip += 42;
-                }    
-            };
-
-            await workbook.xlsx.writeFile(directory+'/jig_map.xlsx')
+            await workbook.xlsx.writeFile(`${directory}/${node.filename}_jig_map.xlsx`)
             .then(() => {
                 console.log('The JIG MAPPING file was written successfully.')
                 node.status({ fill: "green", shape: "dot", text: "The JIG MAPPING file was written successfully." });
