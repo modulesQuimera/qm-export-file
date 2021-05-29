@@ -101,7 +101,7 @@ module.exports = function (RED) {
                 { type: 'multimeter_modular_V1_0', feat: 'G', pin: 'H', board: 'I', skip: 35, maps: globalContext.get("map").multimeter, colorHeader: 'FF32CD32', titleHeader: "- MULTIMETER MAPPING -" },
                 { type: 'communication_modular_V1_0', feat: 'L', pin: 'M', board: 'N', skip: 41, maps: globalContext.get("map").communication, colorHeader: 'FF0080FF', titleHeader: "- COMMUNICATION MAPPING -" },
                 { type: 'relay_modular_V1_0', feat: 'Q', pin: 'R', board: 'S', skip: 18, maps: globalContext.get("map").relay, colorHeader: 'FF808080', titleHeader: "- RELAY MAPPING -" },
-                { type: 'GPIO_modular_V1_0', feat: 'V', pin: 'W', board: 'X', skip: 27, maps: globalContext.get("map").gpio, colorHeader: 'FFFA8072', titleHeader: "- GPIO MAPPING -" },
+                { type: 'GPIO_modular_V1_0', feat: 'V', pin: 'W', board: 'X', skip: 27, maps: globalContext.get("map").gpio, colorHeader: 'FFFFFF00', titleHeader: "- GPIO MAPPING -" },
                 { type: 'mux_modular_V1_0', feat: 'AA', pin: 'AB', board: 'AC', skip: 42, maps: globalContext.get("map").mux, colorHeader: 'FFFFFFFF', titleHeader: "- MUX MAPPING -" },
             ]
 
